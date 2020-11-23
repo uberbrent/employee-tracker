@@ -1,11 +1,12 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { deptView } = require('./utils/functionHandler');
+const { deptView, roleView } = require('./utils/functionHandler');
 
 const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
+    password: '*****',
     database: 'rosterDB'
 });
 
@@ -23,7 +24,7 @@ const mainMenu = () => {
         if (choice === 'View all departments') {
             deptView();
         } else if (choice === 'View all roles') {
-            console.log('View roles');
+            roleView();
         } else if (choice === 'View all employees') {
             console.log('View employees');
         } else if (choice === 'Add a department') {
