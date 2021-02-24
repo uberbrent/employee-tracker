@@ -1,23 +1,23 @@
-DROP DATABASE IF EXISTS rosterDB;
-CREATE DATABASE rosterDB;
-USE rosterDB;
+DROP DATABASE IF EXISTS staff;
+CREATE DATABASE staff;
+USE staff;
 
 CREATE TABLE departments(
-    id INT NOT NULL AUTO_INCREMENT,
-    deptName VARCHAR(30) NOT NULL,
-    PRIMARY KEY (id)
+    id INTEGER(3) AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE roles(
-    id INT NOT NULL AUTO_INCREMENT,
+    id INTEGER(3) AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INT NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY(id)
 );
 
-CREATE TABLE employee(
-    id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE employees(
+    id INTEGER(3) AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
