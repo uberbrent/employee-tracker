@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '****',
+    password: 'Circa@42',
     database: 'staff'
 });
 
@@ -87,13 +87,15 @@ function Department() {
 
 let employeeArr = [];
 function Employee() {
-    connection.query(`SELECT concat(first_name, ' ', last_name) AS full_name FROM employees`, function (err, res) {
-        if (err) throw err;
+    connection.query(`SELECT concat(first_name, ' ', last_name) AS full_name FROM employees`, function(err, res) {
+        if(err) throw err;
         for (let i = 0; i < res.length; i++) {
             employeeArr.push(res[i].full_name);
         }
     })
     return employeeArr;
+    //return connection.promise().query(`SELECT concat(first_name, ' ', last_name) AS full_name FROM employees`)
+
 }
 
 viewDepartment = () => {
@@ -176,20 +178,20 @@ addRole = () => {
             choices: Department()
         }
     ])
-    .then(value => {
-        let id = Department().indexOf(value.roleDepartment) + 1;
-        connection.query(`INSERT INTO roles SET ?`,
-        {
-            title: value.roleName,
-            salary: value.roleSalary,
-            department_id: id
-        },
-        function(err, res) {
-            if (err) throw err;
-            console.log(res.affectedRows + ' role inserted!\n');
-            mainPrompt();
+        .then(value => {
+            let id = Department().indexOf(value.roleDepartment) + 1;
+            connection.query(`INSERT INTO roles SET ?`,
+                {
+                    title: value.roleName,
+                    salary: value.roleSalary,
+                    department_id: id
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res.affectedRows + ' role inserted!\n');
+                    mainPrompt();
+                });
         });
-    });
 };
 
 addEmployee = () => {
@@ -217,29 +219,39 @@ addEmployee = () => {
             choices: Employee()
         }
     ])
-    .then(value => {
-        let roleId = Role().indexOf(value.employeeRole) + 1;
-        let managerId = Employee().indexOf(value.manager) + 1;
-        connection.query(`INSERT INTO employees SET ?`,
-        {
-            first_name: value.firstName,
-            last_name: value.lastName,
-            role_id: roleId,
-            manager_id: managerId
-        },
-        function(err, res) {
-            if(err) throw err;
-            console.log(res.affectedRows + ' employee inserted!\n');
-            mainPrompt();
+        .then(value => {
+            let roleId = Role().indexOf(value.employeeRole) + 1;
+            let managerId = Employee().indexOf(value.manager) + 1;
+            connection.query(`INSERT INTO employees SET ?`,
+                {
+                    first_name: value.firstName,
+                    last_name: value.lastName,
+                    role_id: roleId,
+                    manager_id: managerId
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res.affectedRows + ' employee inserted!\n');
+                    mainPrompt();
+                });
         });
-    });
 };
 
 updateByRole = () => {
+    // let arr
+    // let empl = await Employee().then((res) => {
+
+    //     arr = res[0];
+    // })
+
+    // const employeeChoices = arr.map((a) => (
+    //     { name: a.full_name }
+    // ))
+
     return inquirer.prompt([
         {
             type: 'list',
-            name: 'employee',
+            name: 'employees',
             message: 'Which employee role are you updating?',
             choices: Employee()
         },
@@ -250,17 +262,17 @@ updateByRole = () => {
             choices: Role()
         }
     ])
-    .then (value => {
-        let employeeId = Employee().indexOf(value.employee) + 1;
-        let roleId = Role().indexOf(value.newRole) + 1;
-        connection.query(`UPDATE employees SET ? WHERE ?`,
-        [{ role_id: roleId }, { id: employeeId }],
-        function(err, res) {
-            if(err) throw err;
-            console.log(res.affectedRows + ' employee role updated!\n');
-            mainPrompt();
+        .then(value => {
+            let employeeId = Employee().indexOf(value.employee) + 1;
+            let roleId = Role().indexOf(value.newRole) + 1;
+            connection.query(`UPDATE employees SET ? WHERE ?`,
+                [{ role_id: roleId }, { id: employeeId }],
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res.affectedRows + ' employee role updated!\n');
+                    mainPrompt();
+                });
         });
-    });
 };
 
 endConnection = () => {
